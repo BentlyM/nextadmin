@@ -110,11 +110,20 @@ const SideBar = () => {
           <li key={cat.title}>
             <span className={styles.cat}>{cat.title}</span>
             {cat.list.map((item) => (
-              <MenuLink key={item.title} title={item.title} path={item.path} icon={item.icon} />
+              <MenuLink
+                key={item.title}
+                title={item.title}
+                path={item.path}
+                icon={item.icon}
+              />
             ))}
           </li>
         ))}
       </ul>
+      <button className={styles.logout}>
+        <MdLogout />
+        Logout
+      </button>
     </div>
   );
 };
