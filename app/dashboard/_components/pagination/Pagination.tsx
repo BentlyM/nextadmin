@@ -1,14 +1,48 @@
-import React from 'react'
-import styles from './pagination.module.css'
+'use client';
+import React from 'react';
+import styles from './pagination.module.css';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+const Pagination = ({ count }: { count: number }) => {
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const pathname = usePathname();
 
-const Pagination = () => {
+  const page = searchParams.get('page') || '1';
+
+  const params = new URLSearchParams(searchParams);
+  const ITEM_PER_PAGE = 2;
+
+  const hasPrev = ITEM_PER_PAGE * (parseInt(page) - 1) > 0;
+  const hasNext = ITEM_PER_PAGE * (parseInt(page) - 1) + ITEM_PER_PAGE < count;
+
+  function handleChangePage(type: string): void {
+    if (type === 'prev') {
+      params.set('page', String(Math.max(1, parseInt(page) - 1)));
+    } else if (type === 'next') {
+      params.set('page', String(parseInt(page) + 1));
+    }
+    replace(`${pathname}?${params}`);
+  }
+
   return (
     <div className={styles.container}>
-        <button className={styles.button} disabled>Previous</button>
-        <button className={styles.button}>Next</button>
+      <button
+        className={styles.button}
+        disabled={!hasPrev}
+        onClick={() => handleChangePage('prev')}
+      >
+        Previous
+      </button>
+      <button
+        className={styles.button}
+        disabled={!hasNext}
+        onClick={() => handleChangePage('next')}
+      >
+        Next
+      </button>
     </div>
-  )
-}
+  );
+};
 
-export default Pagination
+export default Pagination;

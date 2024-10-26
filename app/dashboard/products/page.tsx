@@ -1,11 +1,26 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import styles from './products.module.css'
+import styles from './products.module.css';
 import Search from '../_components/search/Search';
 import Pagination from '../_components/pagination/Pagination';
+import prisma from '@/app/lib/prisma';
+import { fetchProducts } from '@/app/lib/data';
+import { QueryOptions } from '../users/page';
 
-const ProductsPage = () => {
+const ProductsPage = async ({ searchParams }: { searchParams: Promise<QueryOptions> }) => {
+  const resolvedSearchParams = await searchParams;
+
+  const q = resolvedSearchParams.q || '';
+  const page = resolvedSearchParams.page || '1';
+  const products = await fetchProducts(q, page);
+
+  const count = await prisma.product.count({
+    where: {
+      OR: [{ title: { contains: q, mode: 'insensitive' } }],
+    },
+  });
+
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -19,46 +34,48 @@ const ProductsPage = () => {
           <tr>
             <td>Title</td>
             <td>Description</td>
-            <td>Role</td>
+            <td>Price</td>
             <td>Created At</td>
             <td>Stock</td>
             <td>Action</td>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              <div className={styles.product}>
-                <Image
-                  src="/noproduct.png"
-                  alt=""
-                  width={40}
-                  height={40}
-                  className={styles.productImage}
-                />
-                IPhone
-              </div>
-            </td>
-            <td>Desc</td>
-            <td>999</td>
-            <td>13.01.2022</td>
-            <td>72</td>
-            <td>
-              <div className={styles.buttons}>
-                <Link href="/dashboard/products/test">
-                  <button className={`${styles.button} ${styles.view}`}>
-                    View
+          {products.map((product) => (
+            <tr key={product.id}>
+              <td>
+                <div className={styles.product}>
+                  <Image
+                    src={product.img || '/noproduct.png'} // Replace with actual image URL
+                    alt={product.title}
+                    width={40}
+                    height={40}
+                    className={styles.productImage}
+                  />
+                  {product.title}
+                </div>
+              </td>
+              <td>{product.desc}</td>
+              <td>{product.price}</td>
+              <td>{new Date(product.createdAt).toLocaleDateString()}</td>
+              <td>{product.stock}</td>
+              <td>
+                <div className={styles.buttons}>
+                  <Link href={`/dashboard/products/${product.id}`}>
+                    <button className={`${styles.button} ${styles.view}`}>
+                      View
+                    </button>
+                  </Link>
+                  <button className={`${styles.button} ${styles.delete}`}>
+                    Delete
                   </button>
-                </Link>
-                <button className={`${styles.button} ${styles.delete}`}>
-                  Delete
-                </button>
-              </div>
-            </td>
-          </tr>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination count={count} />
     </div>
   );
 };
