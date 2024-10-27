@@ -14,7 +14,7 @@ import {
 } from 'react-icons/md';
 import MenuLink from './menuLink/MenuLink';
 import Image from 'next/image';
-import { auth, CustomSession } from '@/auth';
+import { auth, CustomSession, signOut } from '@/auth';
 import { redirect } from 'next/navigation';
 
 export type SideBarSelection = {
@@ -130,7 +130,10 @@ const SideBar = async () => {
           </li>
         ))}
       </ul>
-      <form action={''}>
+      <form action={async () => {
+        'use server'
+        await signOut();
+      }}>
         <button className={styles.logout}>
           <MdLogout />
           Logout
