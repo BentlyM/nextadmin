@@ -3,15 +3,12 @@ import prisma from './prisma';
 
 export const fetchUsers = async (q: string, page: string): Promise<User[]> => {
   try {
-    const regex = new RegExp(q, 'i');
-
     const ITEM_PER_PAGE = 2;
 
     const users = await prisma.user.findMany({
       where: {
         OR: [
           { username: { contains: q, mode: 'insensitive' } },
-          // { username: { matches: regex } } might use this
         ],
       },
       skip: ITEM_PER_PAGE * (parseInt(page) - 1),
@@ -51,15 +48,12 @@ export const fetchProducts = async (
   page: string
 ): Promise<Product[]> => {
   try {
-    const regex = new RegExp(q, 'i');
-
     const ITEM_PER_PAGE = 2;
 
     const products = await prisma.product.findMany({
       where: {
         OR: [
           { title: { contains: q, mode: 'insensitive' } },
-          // { username: { matches: regex } } might use this
         ],
       },
       skip: ITEM_PER_PAGE * (parseInt(page) - 1),

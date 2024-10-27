@@ -1,7 +1,7 @@
 import { fetchProduct } from '@/app/lib/data';
 import styles from './singleProduct.module.css';
 import Image from 'next/image';
-import { addProduct, updateProduct } from '../add/_actions/product';
+import { updateProduct } from '../add/_actions/product';
 
 const SingleProductPage = async ({ params }: { params: { id: string } }) => {
   const {id} = await params; // next js 15 moment

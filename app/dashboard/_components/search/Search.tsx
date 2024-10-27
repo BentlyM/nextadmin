@@ -1,7 +1,6 @@
 'use client';
 import { MdSearch } from 'react-icons/md';
 import styles from './search.module.css';
-
 import React from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
@@ -16,7 +15,7 @@ const Search = ({ placeholder }: { placeholder: string }) => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const params = new URLSearchParams(searchParams);
 
-      params.set("page", "1");
+      params.set('page', '1');
 
       if (e.target.value) {
         e.target.value.length > 2 && params.set('q', e.target.value);

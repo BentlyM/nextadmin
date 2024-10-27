@@ -1,4 +1,4 @@
-import React, { Key } from 'react';
+import React from 'react';
 import styles from './sidebar.module.css';
 import {
   MdDashboard,
@@ -14,6 +14,8 @@ import {
 } from 'react-icons/md';
 import MenuLink from './menuLink/MenuLink';
 import Image from 'next/image';
+import { auth, CustomSession } from '@/auth';
+import { redirect } from 'next/navigation';
 
 export type SideBarSelection = {
   title: string;
@@ -89,19 +91,27 @@ const menuItems: SideBarContent[] = [
   },
 ];
 
-const SideBar = () => {
+const SideBar = async () => {
+  const session = (await auth()) as CustomSession;
+
+  if (!session!.user) {
+    redirect('/login');
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.user}>
         <Image
           className={styles.userImage}
-          src="/noavatar.png"
+          src={session?.user.img || '/noavatar.png'}
           alt=""
           width={50}
           height={50}
         />
         <div className={styles.userDetail}>
-          <span className={styles.username}>John Joe</span>
+          <span className={styles.username}>
+            {session?.user?.username || 'anonymous'}
+          </span>
           <span className={styles.userTitle}>Administrator</span>
         </div>
       </div>
@@ -120,10 +130,12 @@ const SideBar = () => {
           </li>
         ))}
       </ul>
-      <button className={styles.logout}>
-        <MdLogout />
-        Logout
-      </button>
+      <form action={''}>
+        <button className={styles.logout}>
+          <MdLogout />
+          Logout
+        </button>
+      </form>
     </div>
   );
 };
