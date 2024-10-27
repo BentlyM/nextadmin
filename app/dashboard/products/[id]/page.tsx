@@ -3,9 +3,11 @@ import styles from './singleProduct.module.css';
 import Image from 'next/image';
 import { updateProduct } from '../add/_actions/product';
 
-const SingleProductPage = async ({ params }: { params: { id: string } }) => {
-  const {id} = await params; // next js 15 moment
-  const product = await fetchProduct(id);
+type Params = Promise<{ id: string[] }>;
+
+const SingleProductPage = async ({ params }: { params: Params }) => {
+  const { id } = await params; // next js 15 moment
+  const product = await fetchProduct(id.toString()); // next js 15 moment
 
   return (
     <div className={styles.container}>
@@ -20,11 +22,23 @@ const SingleProductPage = async ({ params }: { params: { id: string } }) => {
           <label>Title</label>
           <input type="text" name="title" placeholder={product?.title} />
           <label>Price</label>
-          <input type="number" name="price" placeholder={String(product?.price)} />
+          <input
+            type="number"
+            name="price"
+            placeholder={String(product?.price)}
+          />
           <label>Stock</label>
-          <input type="number" name="stock" placeholder={String(product?.stock)} />
+          <input
+            type="number"
+            name="stock"
+            placeholder={String(product?.stock)}
+          />
           <label>Color</label>
-          <input type="text" name="color" placeholder={product?.color as string} />
+          <input
+            type="text"
+            name="color"
+            placeholder={product?.color as string}
+          />
           <label>Size</label>
           <textarea name="size" placeholder={product?.size as string} />
           <label>Cat</label>
@@ -33,7 +47,12 @@ const SingleProductPage = async ({ params }: { params: { id: string } }) => {
             <option value="computers">Computers</option>
           </select>
           <label>Description</label>
-          <textarea name="desc" id="desc" rows={10} placeholder={product?.desc}></textarea>
+          <textarea
+            name="desc"
+            id="desc"
+            rows={10}
+            placeholder={product?.desc}
+          ></textarea>
           <button>Update</button>
         </form>
       </div>
