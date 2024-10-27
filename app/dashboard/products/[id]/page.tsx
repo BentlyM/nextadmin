@@ -3,11 +3,9 @@ import styles from './singleProduct.module.css';
 import Image from 'next/image';
 import { updateProduct } from '../add/_actions/product';
 
-type Params = Promise<{ id: string[] }>;
-
-const SingleProductPage = async ({ params }: { params: Params }) => {
-  const { id } = await params; // next js 15 moment
-  const product = await fetchProduct(id.toString()); // next js 15 moment
+const SingleProductPage = async ({ params }: { params: {id: string} }) => {
+  const { id } = params;
+  const product = await fetchProduct(id); 
 
   return (
     <div className={styles.container}>

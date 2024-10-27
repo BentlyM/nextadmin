@@ -6,7 +6,7 @@ import { fetchUser } from '@/app/lib/data';
 import { updateUser } from '../add/_actions/user';
 
 const SingleUserPage = async ({ params }: { params: {id: string} }) => {
-  const {id} = await params; // next js 15 moment
+  const {id} = params; 
   const user = await fetchUser(id);
   return (
     <div className={styles.container}>
