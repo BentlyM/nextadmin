@@ -7,8 +7,13 @@ import Pagination from '../_components/pagination/Pagination';
 import prisma from '@/app/lib/prisma';
 import { fetchProducts } from '@/app/lib/data';
 import { QueryOptions } from '../users/page';
+import { deleteProduct } from './add/_actions/product';
 
-const ProductsPage = async ({ searchParams }: { searchParams: Promise<QueryOptions> }) => {
+const ProductsPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<QueryOptions>;
+}) => {
   const resolvedSearchParams = await searchParams;
 
   const q = resolvedSearchParams.q || '';
@@ -66,9 +71,12 @@ const ProductsPage = async ({ searchParams }: { searchParams: Promise<QueryOptio
                       View
                     </button>
                   </Link>
-                  <button className={`${styles.button} ${styles.delete}`}>
-                    Delete
-                  </button>
+                  <form action={deleteProduct}>
+                    <input type="hidden" name="id" value={product.id} />
+                    <button className={`${styles.button} ${styles.delete}`}>
+                      Delete
+                    </button>
+                  </form>
                 </div>
               </td>
             </tr>

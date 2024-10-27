@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Pagination from '../_components/pagination/Pagination';
 import { fetchUsers } from '@/app/lib/data';
 import prisma from '@/app/lib/prisma';
+import { deleteUser } from './add/_actions/user';
 
 export interface QueryOptions {
   q?: string;
@@ -43,6 +44,7 @@ const UsersPage = async ({
             <td>Name</td>
             <td>Email</td>
             <td>Created</td>
+            <td>Role</td>
             <td>Status</td>
             <td>Action</td>
           </tr>
@@ -73,16 +75,19 @@ const UsersPage = async ({
                       View
                     </button>
                   </Link>
-                  <button className={`${styles.button} ${styles.delete}`}>
-                    Delete
-                  </button>
+                  <form action={deleteUser}>
+                    <input type="hidden" name="id" value={user.id} />
+                    <button className={`${styles.button} ${styles.delete}`}>
+                      Delete
+                    </button>
+                  </form>
                 </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <Pagination count={count}/>
+      <Pagination count={count} />
     </div>
   );
 };

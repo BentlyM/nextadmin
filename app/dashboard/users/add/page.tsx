@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './addUser.module.css';
-import { addUser } from '@/app/lib/actions';
+import { addUser } from './_actions/user';
 
 const AddUserPage = () => {
   return (

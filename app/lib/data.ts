@@ -28,7 +28,28 @@ export const fetchUsers = async (q: string, page: string): Promise<User[]> => {
   }
 };
 
-export const fetchProducts = async (q: string, page: string): Promise<Product[]> => {
+export const fetchUser = async (id: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    return user;
+  } catch (e) {
+    if (e instanceof Error) {
+      console.error(e.message);
+      throw new Error('Failed to fetch user!');
+    }
+    throw e;
+  }
+};
+
+export const fetchProducts = async (
+  q: string,
+  page: string
+): Promise<Product[]> => {
   try {
     const regex = new RegExp(q, 'i');
 
@@ -49,7 +70,25 @@ export const fetchProducts = async (q: string, page: string): Promise<Product[]>
   } catch (e) {
     if (e instanceof Error) {
       console.error(e.message);
-      throw new Error('Failed to fetch users!');
+      throw new Error('Failed to fetch products!');
+    }
+    throw e;
+  }
+};
+
+export const fetchProduct = async (id: string) => {
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    return product;
+  } catch (e) {
+    if (e instanceof Error) {
+      console.error(e.message);
+      throw new Error('Failed to fetch product!');
     }
     throw e;
   }
